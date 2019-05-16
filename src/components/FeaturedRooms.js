@@ -8,7 +8,7 @@ export default class FeaturedRooms extends Component {
 
     return (
       <div>
-        {greeting} {name} from FeaturedRooms{" "}
+        {greeting} {name} from FeaturedRooms
       </div>
     );
   }
