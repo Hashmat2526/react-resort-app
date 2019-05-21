@@ -8,7 +8,7 @@ import Rooms from "../pages/Rooms";
 const getUnique = (items, value) => {
   return [...new Set(items.map(item => item[value]))];
 };
-export default function RoomFilter({rooms}) {
+export default function RoomFilter({ rooms }) {
   const context = useContext(RoomContext);
   // console.log(context);
   const {
@@ -37,6 +37,17 @@ export default function RoomFilter({rooms}) {
     );
   });
 
+  // get unique capacity
+  let people = getUnique(rooms, "capacity");
+  //map to jsx
+  people = people.map((item, index) => {
+    return (
+      <option value={item} key={index}>
+        {item}
+      </option>
+    );
+  });
+
   return (
     <section className="filter-container">
       <Title title="search rooms" />
@@ -56,6 +67,21 @@ export default function RoomFilter({rooms}) {
           </select>
         </div>
         {/* end select type */}
+        {/* select capacity*/}
+        <div className="form-group">
+          <label htmlFor="capacity">room capacity</label>
+          <select
+            name="capacity"
+            id="capacity"
+            value={capacity}
+            className="form-control"
+            onChange={handleChange}
+          >
+            {/* <option value="single">single</option> */}
+            {people}
+          </select>
+        </div>
+        {/* end select capacity*/}
       </form>
     </section>
   );
