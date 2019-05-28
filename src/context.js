@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import items from "./data";
 import Client from "./Contentful";
-Client.getEntries({
-  content_type: "resortBeach"
-})
-  .then(response => console.log(response.items))
-  .catch(console.error);
 
 const RoomContext = React.createContext();
 
@@ -26,28 +20,42 @@ class RoomProvider extends Component {
     pets: false
   };
 
-  componentDidMount() {
-    let rooms = this.formatData(items);
-    let featuredRooms = rooms.filter(room => room.featured === true);
-    let maxPrice = Math.max(...rooms.map(room => room.price));
-    let maxSize = Math.max(...rooms.map(room => room.size));
+  // get data from contenful
+  getData = async () => {
+    try {
+      let response = await Client.getEntries({
+        content_type: "resortBeach"
+      });
+      console.log(response);
+      console.log(response.items);
+      let rooms = this.formatData(response.items);
+      let featuredRooms = rooms.filter(room => room.featured === true);
+      let maxPrice = Math.max(...rooms.map(room => room.price));
+      let maxSize = Math.max(...rooms.map(room => room.size));
 
-    this.setState({
-      rooms,
-      featuredRooms,
-      sortedRooms: rooms,
-      loading: false,
-      price: maxPrice,
-      maxPrice,
-      maxSize
-    });
+      this.setState({
+        rooms,
+        featuredRooms,
+        sortedRooms: rooms,
+        loading: false,
+        price: maxPrice,
+        maxPrice,
+        maxSize
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  componentDidMount() {
+    this.getData();
   }
 
   formatData(items) {
     let tempItems = items.map(item => {
       let id = item.sys.id;
-      let images = item.fields.images.map(image => image.fields.file.url);
-      let room = { ...item.fields, images, id };
+      // let images = item.fields.images.map(image => image.fields.file.url);
+      let room = { ...item.fields, id };
       return room;
     });
     return tempItems;
