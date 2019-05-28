@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 import items from "./data";
+import Client from "./Contentful";
+Client.getEntries({
+  content_type: "resortBeach"
+})
+  .then(response => console.log(response.items))
+  .catch(console.error);
+
 const RoomContext = React.createContext();
 
 class RoomProvider extends Component {
